@@ -1,0 +1,27 @@
+<div {% if parent_id %}class="collapse card category_sub_{{parent_id}}" {% else %}class="card" {% endif %}>
+    <div class="card-header" style="padding:0;">
+        <h2 class="mb-0">
+            {% if parent_id %}
+            <a class="btn btn-link" href="{{category.get_absolute_url}}">
+                {{category}}
+            </a>
+            {% else %}
+            <button class="btn btn-link" type="button" data-toggle="collapse"
+                    data-target=".category_sub_{{category.id}}" aria-expanded="false">
+                {{category}}
+            </button>
+            {% endif %}
+        </h2>
+    </div>
+</div>
+{% comment %}
+category = models.ForeignKey(Category, on_delete=models.SET_NULL,)
+category.category_set.all()
+{% endcomment%}
+{% if category.category_set %}
+{% with category.id as parent_id %}
+{% for category in category.category_set.all %}
+{% include 'post/part_category_list.html' %}
+{% endfor %}
+{% endwith %}
+{% endif %}

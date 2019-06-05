@@ -298,7 +298,9 @@ fabric.properties
 [Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
+
+
 venv
 .idea
-secret.py
+Land_project/Dabang/secret.py
 # End of https://www.gitignore.io/api/venv,linux,django,python,pycharm

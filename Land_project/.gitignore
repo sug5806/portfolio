@@ -300,5 +300,5 @@ pyvenv.cfg
 pip-selfcheck.json
 venv
 .idea
-Dabang/secret.py
+secret.py
 # End of https://www.gitignore.io/api/venv,linux,django,python,pycharm

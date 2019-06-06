@@ -1,25 +1,15 @@
 {% extends 'base.html' %}
 
+{% load staticfiles %}
+
+<link rel="stylesheet" href="{% static 'Dabang/main.css' %}">
+
 
 {% block content %}
 
     <span class="main-char1">자전차왕 엄복동</span>
-
-
-{#    <div class="container">#}
-{#        <div class="d-flex justify-content-center">#}
-{#            <div class="searchbar">#}
-{#                <form action="{% url 'dabang:search' %}" method="POST">#}
-{##}
-{#                    {% csrf_token %}#}
-{#                    <input id="sample5_address" type="text" placeholder="주소를 입력해주세요" name="search_add">#}
-{#                    <input type="submit" class="search_icon"><i class="fas fa-search"></i></input>#}
-{##}
-{#                </form>#}
-{##}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
+    <br>
+    {% include 'Dabang/search.html' %}
 
 
 

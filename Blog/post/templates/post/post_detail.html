@@ -14,12 +14,11 @@
 
         {% load tagging_tags %}
 
-        {#    object에 들어있는 태그를 불러오겠다#}
         {% tags_for_object object as tags %}
         {% if tags %}
             Tags :
             {% for tag in tags %}
-                 #{{tag.name}}
+                <a href="{% url 'post:post_list' %}tags/{{ tag.name }}">#{{tag.name}}</a>
             {% endfor %}
         {% endif %}
     </div>

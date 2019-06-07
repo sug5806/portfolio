@@ -74,3 +74,10 @@ class PostTaggedObjectList(TaggedObjectList):
     allow_empty = True
     template_name = 'post/post_list.html'
 
+
+
+
+from django.views.generic import TemplateView
+
+class TagList(TemplateView):
+    template_name = 'post/tag_list.html'

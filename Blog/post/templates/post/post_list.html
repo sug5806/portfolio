@@ -26,12 +26,12 @@
             {% for object in object_list %}
             <tr>
                 <td>{{object.id}}</td>
-                 <td><a href="{{object.get_absolute_url}}">{{object.title}}</a></td>
+                <td><a href="{{object.get_absolute_url}}">{{object.title}}</a></td>
                 <td>{{object.created}}</td>
                 <td>{{object.updated}}</td>
                 {% if user.is_authenticated %}
-                <th><a href="{% url '' %}">update</a></th>
-                <th><a href="">delete</a></th>
+                <th><a href="{% url 'post:post_update' object.id %}">update</a></th>
+                <th><a href="{% url 'post:post_delete' object.id %}">delete</a></th>
                 {% endif %}
             </tr>
             {% endfor %}
@@ -43,18 +43,18 @@
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
                 {% if page_obj.has_previous %}
-                <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">&leftarrow;</a>
+                <li class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}">Previous</a>
                 </li>
                 {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#">&leftarrow;</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
                 {% endif %}
                 {% for page in paginator.page_range %}
                 <li class="page-item"><a class="page-link" href="?page={{page}}">{{page}}</a></li>
                 {% endfor %}
                 {% if page_obj.has_next %}
-                <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">&rightarrow;</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{page_obj.next_page_number}}">Next</a></li>
                 {% else %}
-                <li class="page-item disabled"><a class="page-link" href="#">&rightarrow;</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
                 {% endif %}
             </ul>
         </nav>

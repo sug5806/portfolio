@@ -1,8 +1,12 @@
-/*@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";*/
 
-span .main-char1{
+body {
     font-family: 'Poppins', sans-serif;
-    font-size:20%;
+    font-size:60px;
     text-align:center;
+    align: center;
 
+}
+
+p {
+    font-size: 17px;
 }

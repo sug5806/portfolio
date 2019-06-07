@@ -8,13 +8,13 @@
         <div id="map" style="width:700px;height:700px;margin-top:10px;display:none"></div>
 
 
-
+{% block extra_script %}
 
 
 <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ My_API }}&libraries=services"></script>
 
-<script>
+<script type="text/javascript">
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
             center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
@@ -39,9 +39,10 @@
             oncomplete: function (data) {
 
                 var addr = data.address; // 최종 주소
-                var sigunguCode = data.sigunguCode;
-                alert(addr);
+                var real = data;
 
+
+                get_addr(real);
 
                 // 주소로 상세 정보를 검색
                 {#geocoder.addressSearch(data.address, function (results, status) {#}
@@ -71,23 +72,29 @@
             }
         }).open();
 
-
+    }
+    function get_addr(real) {
         $.ajax({
-            method: 'POST',
+            method: 'GET',
             url: {% url 'dabang:search' %},
-            data: {'addr': addr},
+
+            data: {'addr': real},
             success: function (data) {
                 alert("complete");
-                window.location.replace({% url 'dabang:search' %});
+                if (form.XHR.status == 200){
+
+                }
+
+                {#window.location.replace({% url 'dabang:search_list' %});#}
             },
             error: function (data) {
                 alert("didn't work");
-                location.href = {% url 'dabang:search' %}
+                {#window.location.replace({% url 'dabang:search_list' %});#}
             },
 
-        })
+        });
 
     }
 
-
 </script>
+{% endblock %}

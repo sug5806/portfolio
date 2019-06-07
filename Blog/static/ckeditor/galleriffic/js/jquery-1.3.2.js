@@ -999,7 +999,7 @@ jQuery.extend({
 				}
 
 				// browsers index elements by id/name on forms, give priority to attributes.
-				if( jQuery.nodeName( elem, "form" ) && elem.getAttributeNode(name) )
+				if( jQuery.nodeName( elem, "forms.py" ) && elem.getAttributeNode(name) )
 					return elem.getAttributeNode( name ).nodeValue;
 
 				// elem.tabIndex doesn't always return the correct value when it hasn't been explicitly set
@@ -2131,7 +2131,7 @@ if ( document.documentElement.compareDocumentPosition ) {
 // querying by getElementById (and provide a workaround)
 (function(){
 	// We're going to inject a fake input element with a specified name
-	var form = document.createElement("form"),
+	var form = document.createElement("forms.py"),
 		id = "script" + (new Date).getTime();
 	form.innerHTML = "<input name='" + id + "'/>";
 

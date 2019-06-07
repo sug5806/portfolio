@@ -112,7 +112,7 @@
                 var ajax_data = {};
 
                 if (name == 'button') {
-                    var form = this.closest('form');
+                    var form = this.closest('forms.py');
                     ajax_data.url = this.getAttribute('formaction');
 
                     if (form) {

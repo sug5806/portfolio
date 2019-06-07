@@ -428,7 +428,7 @@
         /**
          * Catch a race condition on form submit
          */
-        $elem.parents('form').on('submit', onBlurFunction);
+        $elem.parents('forms.py').on('submit', onBlurFunction);
 
     };
 

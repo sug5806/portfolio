@@ -27,6 +27,8 @@ class Dabang_List(ListView):
 
 
 
+#######################################################################
+
 
 class Dabang_search(View):
     pass
@@ -36,30 +38,27 @@ from django.http import JsonResponse
 def dabang_Search(request):
     if request.method == "GET":
         data = request.GET
-        print(data)
 
-        # print(data['addr[address]'])
-        # print(data["addr[zonecode]"])
         add = data['addr[address]']
         zone = data["addr[sigunguCode]"]
-
-        print(add, zone)
-
 
         context = {
             'address': add,
             'zonecode': zone,
         }
 
-        print()
-        print()
-        print()
 
         context.update(get_info(zone))
 
-        # return render(request, 'Dabang/search_list.html', context)
-        # return render(request, 'Dabang/search_list.html')
+        print(context)
+
         return JsonResponse(context)
+
+
+
+#############################################################
+
+
 
 from pprint import pprint
 
@@ -86,28 +85,19 @@ def get_info(LAW):
     json_type = json.dumps(dict_type)
     dict_type2 = json.loads(json_type)
 
-
-
-    price = dict_type2['response']['body']['items']['item'][0]['거래금액']
-    name = dict_type2['response']['body']['items']['item'][0]['아파트']
-    year = dict_type2['response']['body']['items']['item'][0]['년']
-    month = dict_type2['response']['body']['items']['item'][0]['월']
-    day = dict_type2['response']['body']['items']['item'][0]['일']
-    floor = dict_type2['response']['body']['items']['item'][0]['층']
-
     context.update(
         price=dict_type2['response']['body']['items']['item'][0]['거래금액'],
         name=dict_type2['response']['body']['items']['item'][0]['아파트'],
-        year=year,
-        month=month,
-        day=day,
-        floor=floor,
+        year=dict_type2['response']['body']['items']['item'][0]['년'],
+        month=dict_type2['response']['body']['items']['item'][0]['월'],
+        day=dict_type2['response']['body']['items']['item'][0]['일'],
+        floor=dict_type2['response']['body']['items']['item'][0]['층'],
     )
 
-    pprint(dict_type2['response']['body']['items']['item'][0]['거래금액'])
+    print(context)
     print()
     print()
     print()
-    print()
+
     return context
 

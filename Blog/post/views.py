@@ -12,7 +12,7 @@ from .models import *
 
 class PostList(ListView):
     model = Post
-    paginate_by = 1
+    paginate_by = 5
     template_name = 'post/post_list.html'
 
     def get_queryset(self):
@@ -78,11 +78,3 @@ from django.views.generic import TemplateView
 
 class TagList(TemplateView):
     template_name = 'post/tag_list.html'
-
-
-
-
-
-
-
-

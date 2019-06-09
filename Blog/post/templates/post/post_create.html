@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base2.html' %}
 
 {% block title %}
 Update - {{object.title|truncatechars:15}}
@@ -6,9 +6,7 @@ Update - {{object.title|truncatechars:15}}
 
 {% block content %}
 <div class="row mt-3">
-    <div class="col">
-        {% include 'post/category_list.html' %}
-    </div>
+    <div class="col"></div>
     <div class="col-8">
         <form action="" method="post">
             {% csrf_token %}

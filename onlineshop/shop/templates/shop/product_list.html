@@ -1,9 +1,21 @@
 {% extends 'base.html' %}
 
+<style>
+    span #border-dark {
+        margin-top: 10px;
+        margin-left: 10px;
+    }
+</style>
 
-
-{% block content %}
+{% block contents %}
     {% for object in object_list %}
-        {{ object.text }}
+        <span id="border-dark" class="card border-dark mb-3" style="max-width: 20rem;">
+            <div class="card-header">{{ object.category }}</div>
+                <div class="card-body">
+                <h4 class="card-title">{{ object.name }}</h4>
+                <div class="card-text">{{ object.description|safe }}</div>
+            </div>
+            <div class="card-footer">가격 : {{ object.price }}</div>
+        </span>
     {% endfor %}
 {% endblock %}

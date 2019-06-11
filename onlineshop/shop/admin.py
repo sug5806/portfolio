@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product
-from django_summernote.admin import SummernoteModelAdmin
+# from django_summernote.admin import SummernoteModelAdmin
 # Register your models here.
 
 

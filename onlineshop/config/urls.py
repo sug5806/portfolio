@@ -28,7 +28,7 @@ if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
-        path('summernote/', include('django_summernote.urls')),
+        # path('summernote/', include('django_summernote.urls')),
         path('ckeditor/', include('ckeditor_uploader.urls')),
         # For django versions before 2.0:
         # url(r'^__debug__/', include(debug_toolbar.urls)),

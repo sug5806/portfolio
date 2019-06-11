@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'cart',  # 장바구니 - 세션 방식(소유자를 매칭할 필요가 없다), 데이터베이스 방식
     'coupon',  # 할인 - 금액, 퍼센트할인, 무료 제품, 무료 배송
     'order',  # 실제 주문 - 주문 후 배송조회, invoice 확인, iamport 결제
-    'django_summernote',
+    # 'django_summernote',
     'ckeditor',
     'ckeditor_uploader',
 

@@ -27,18 +27,10 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Logout</a>
             </li>
-            <li class="nav-item dropdown show">
-                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
-                   aria-expanded="true">Dropdown</a>
-                <div class="dropdown-menu" x-placement="bottom-start"
-                     style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 40px, 0px);">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Separated link</a>
-                </div>
-            </li>
+
+             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                {% include 'category_list.html' %}
+            </ul>
         </ul>
         <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="text" placeholder="Search">

@@ -15,7 +15,10 @@
                 <h4 class="card-title">{{ object.name }}</h4>
                 <div class="card-text">{{ object.description|safe }}</div>
             </div>
-            <div class="card-footer">가격 : {{ object.price }}</div>
+            <div class="card-footer">
+                <span>가격 : {{ object.price }}</span>
+                <span style="float:right;"><a class="btn btn-outline-info" href="{% url 'detail' object.id %}">상세보기</a></span>
+            </div>
         </span>
     {% endfor %}
 {% endblock %}

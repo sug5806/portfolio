@@ -43,6 +43,11 @@ INSTALLED_APPS = [
     # 'django_summernote',
     'ckeditor',
     'ckeditor_uploader',
+    'django.contrib.sites',
+    'allauth',  # <- 추가
+    'allauth.account',  # <- 추가
+    'allauth.socialaccount',  # <- 추가
+    'allauth.socialaccount.providers.naver',
 
 ]
 
@@ -123,6 +128,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # <- 디폴트 모델 백엔드
+    'allauth.account.auth_backends.AuthenticationBackend',  # <- 추가
+)
+
+SITE_ID = 1  # 사이트 아이디 기본값
+
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
     'debug_toolbar.panels.timer.TimerPanel',
@@ -138,27 +150,22 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
 ]
 
-
 AWS_REGION = 'ap-northeast-2'
 AWS_STORAGE_BUCKET_NAME = 's-shop'
 
 AWS_S3_CUSTOM_DOMAIN = 's3.%s.amazonaws.com/%s' % (AWS_REGION, AWS_STORAGE_BUCKET_NAME)
 AWS_S3_FILE_OVERWRITE = False
 
-
-
 AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl' : 'max-age=86400',
+    'CacheControl': 'max-age=86400',
 }
 
 AWS_S3_SECURE_URLS = False
-
 
 AWS_DEFAULT_ACT = 'public-read'
 AWS_LOCATION = ''
 
 DEFAULT_FILE_STORAGE = 'config.s3media.MediaStorage'
-
 
 STATIC_URL = 'http://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
@@ -166,8 +173,6 @@ STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 CKEDITOR_RESTRICT_BY_USER = True
 
 CKEDITOR_UPLOAD_PATH = 'wysiwyg/'
-
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

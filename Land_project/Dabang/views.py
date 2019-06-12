@@ -34,28 +34,26 @@ from django.http import JsonResponse
 
 def dabang_Search(request):
     if request.method == "GET":
-        # zone = request.GET.get('sigungu')
-
 
         data = request.GET
-
-        # print(data)
-        # print()
-        # 광화문풍림스페이스
-        # 광화문 풍림스페이스본
 
         add = data['addr[address]']
         zone = data["addr[sigunguCode]"]
         ym = data['ym']
+        YM = ''.join(ym.split('-'))
+        road_name_Code = data['addr[roadnameCode]']
+
         sl = data['sl']
-        bname = data['addr[roadnameCode]']
 
         context = {
             'address': add,
             'zonecode': zone,
         }
 
-        context.update(get_info(zone, ym, sl))
+        context.update(get_info(zone, YM, sl, road_name_Code))
+
+        pprint(context)
+        print()
 
         return JsonResponse(context)
 
@@ -66,7 +64,7 @@ def dabang_Search(request):
 
 from pprint import pprint
 
-def get_info(LAW, DEAL_YMD, SALE):
+def get_info(LAW, DEAL_YMD, SALE, road_name_Code):
     context = dict()
 
     sale = {
@@ -85,10 +83,9 @@ def get_info(LAW, DEAL_YMD, SALE):
     queryParams = 'Dev?' + urlencode({
         quote_plus('ServiceKey'): Public_data,
         quote_plus('pageNo'): '1',
-        quote_plus('numOfRows'): '100',
+        quote_plus('numOfRows'): '500',
         quote_plus('LAWD_CD'): LAW,
         quote_plus('DEAL_YMD'): DEAL_YMD})
-
 
     request = Request(url + queryParams)
 
@@ -99,16 +96,17 @@ def get_info(LAW, DEAL_YMD, SALE):
     json_type = json.dumps(dict_type)
     dict_type2 = json.loads(json_type)
 
-    # pprint(dict_type2)
+    length = int(dict_type2['response']['body']['totalCount'])
 
-    context.update(
-        price=dict_type2['response']['body']['items']['item'][0]['거래금액'],
-        name=dict_type2['response']['body']['items']['item'][0]['아파트'],
-        year=dict_type2['response']['body']['items']['item'][0]['년'],
-        month=dict_type2['response']['body']['items']['item'][0]['월'],
-        day=dict_type2['response']['body']['items']['item'][0]['일'],
-        floor=dict_type2['response']['body']['items']['item'][0]['층'],
-    )
+    AT_list = []
+
+    for num in range(0, length):
+        road = dict_type2['response']['body']['items']['item'][num]['도로명코드']
+
+        if road == road_name_Code:
+            AT_list.append(dict_type2['response']['body']['items']['item'][num])
+
+    context = {'list' : AT_list}
 
     return context
 

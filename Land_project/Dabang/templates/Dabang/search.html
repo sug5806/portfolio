@@ -1,8 +1,6 @@
 {% load staticfiles %}
 <head>
     <link rel="stylesheet" href="{% static 'Dabang/search.css' %}">
-    {#<div style="text-align:center;">#}
-    {#<input type="text" id="sample5_address" placeholder="주소">#}
 
     <style>
         {##exam {#}
@@ -62,7 +60,6 @@
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
           integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 </head>
-{#{% block extra_script %}#}
 
 
 <div class="text-center">
@@ -72,119 +69,72 @@
     </div>
 
     <div id="exam">
-        <span id="search_icon">
-            <i class="fa fa-search" aria-hidden="true"></i>
-        </span>
-        <span id="bang_search_text"></span>
-        <span id="btn_span">
-            <input id="bang_search_btn" class="btn btn-outline-secondary btn-lg" type="button"
-                   onclick="sample5_execDaumPostcode()"
-                   value="주소 검색">
-        </span>
+        <form action="{% url 'dabang:search' %}" method="get">
+            {% csrf_token %}
+            <input type="text" id="sample6_postcode" class="input" placeholder="우편번호">
+            <input type="text" id="sample6_address" placeholder="주소">
+            <input id="bang_search_btn1" class="btn btn-outline-secondary btn-lg" type="button"
+                   onclick="sample6_execDaumPostcode()"
+                   value="주소 검색"><br>
+{#            <input type="text" id="sample6_detailAddress" placeholder="상세주소">#}
+            <input type="text" id="sample6_extraAddress" placeholder="참고항목">
+            <input type="date" id="sample6_date" placeholder="날짜" name="ym" required>
 
+            <div class="form-group">
+                <select class="custom-select" id="custom">
+                    <option selected="" value="1">아파트매매</option>
+                    <option value="2">연립다세대 매매</option>
+                    <option value="3">단독다가구 매매</option>
+                    <option value="4">오피스텔 매매</option>
+                    <option value="5">토지 매매</option>
+                    <option value="6">아파트 전월세</option>
+                    <option value="7">연립다세대 전월세</option>
+                    <option value="8">단독/다가구 전월세</option>
+                    <option value="9">오피스텔 전월세</option>
+                </select>
+            </div>
+
+            <input id="bang_search_btn2" type="submit" value="검색!">
+        </form>
     </div>
     <br>
 
+    <div class="container">
+        <div class="row">
 
-    <div id="map" style="width:700px;height:700px;margin-top:10px;margin-left:100px;display:none"></div>
+            <div class="col-7">
+                <span id="map" style="width:500px;height:500px;margin-top:10px;display:block"></span>
+            </div>
+            <div class="col-5">
+                <div class="card mb-3">
+                    <h3 id="card-header" class="card-header"></h3>
+                    <div class="card-body">
+                        <h6 class="card-subtitle text-muted"></h6>
+                    </div>
+                    <img style="height: 200px; width: 100%; display: block;"
+                         src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
+                         alt="Card image">
+                    <div class="card-body">
+                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of
+                            the card's content.</p>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Cras justo odio</li>
+                        <li class="list-group-item">Dapibus ac facilisis in</li>
+                        <li class="list-group-item">Vestibulum at eros</li>
+                    </ul>
+                    <div class="card-body">
+                        <a href="#" class="card-link">상세 보기</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        2 days ago
+                    </div>
+                </div>
+            </div>
 
-    <script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
-    <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ My_API }}&libraries=services"></script>
-
-    <script type="text/javascript">
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapOption = {
-                center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-                level: 1 // 지도의 확대 레벨
-            };
-
-        //지도를 미리 생성
-        var map = new daum.maps.Map(mapContainer, mapOption);
-        //주소-좌표 변환 객체를 생성
-        var geocoder = new daum.maps.services.Geocoder();
-        //마커를 미리 생성
-        var marker = new daum.maps.Marker({
-            position: new daum.maps.LatLng(37.537187, 127.005476),
-            map: map
-        });
-
-
-
-
-
-        function sample5_execDaumPostcode() {
-            new daum.Postcode({
-                oncomplete: function (data) {
-                    var addr = data.address; // 최종 주소
-                    var real = data;
-                    get_addr(real);
-                },
-                theme: {
-                    searchBgColor: "#0B65C8",
-                    queryTextColor: "#FFFFFF"
-                }
-            }).open();
-
-        }
-
-        function get_addr(real) {
-            $.getJSON({
-                method: 'GET',
-                url: {% url 'dabang:search' %},
-
-                data: {'addr': real},
-                dataType: 'json',
-
-                success: function (data) {
-                    // 주소로 상세 정보를 검색
-                    geocoder.addressSearch(real.address, function (results, status) {
-
-                        // 정상적으로 검색이 완료됐으면
-                        if (status === daum.maps.services.Status.OK) {
-
-                            var result = results[0]; //첫번째 결과의 값을 활용
-
-                            // 해당 주소에 대한 좌표를 받아서
-                            var coords = new daum.maps.LatLng(result.y, result.x);
-                            // 지도를 보여준다.
-                            mapContainer.style.display = "block";
-                            map.relayout();
-                            // 지도 중심을 변경한다.
-                            map.setCenter(coords);
-                            // 마커를 결과값으로 받은 위치로 옮긴다.
-                            marker.setPosition(coords)
-                        }
-
-                    });
-
-                },
-                error: function (data) {
-                    alert("didn't work");
-                },
-            }).done(function (context) {
-                var address = context.address;
-                var zonecode = context.zonecode;
-                var price = context.price;
-                var name = context.name;
-                var year = context.year;
-                var month = context.month;
-                var day = context.day;
-                var floor = context.floor;
-            });
-
-        }
-
-    </script>
-    <br>
-
-    <div class="card text-white bg-primary mb-3" style="max-width: 20rem; display:inline-block;">
-        <div class="card-header">Header</div>
-        <div class="card-body">
-            <h4 class="card-title">Primary card title</h4>
-            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                card's content.</p>
         </div>
     </div>
+    <br>
 
 
     <div class="jumbotron">
@@ -202,7 +152,153 @@
 
 
 </div>
-{#{% endblock %}#}
+
+{# 지도 #}
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ My_API }}&libraries=services"></script>
+
+<script type="text/javascript">
+    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+        mapOption = {
+            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+            level: 1 // 지도의 확대 레벨
+        };
+
+    //지도를 미리 생성
+    var map = new daum.maps.Map(mapContainer, mapOption);
+
+    // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+    var mapTypeControl = new daum.maps.MapTypeControl();
 
 
-{#</div>#}
+    // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+    // daum.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+    map.addControl(mapTypeControl, daum.maps.ControlPosition.TOPRIGHT);
+
+
+    // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+    var zoomControl = new daum.maps.ZoomControl();
+    map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
+
+    // 지도에 교통정보를 표시하도록 지도타입을 추가합니다
+    map.addOverlayMapTypeId(daum.maps.MapTypeId.TRAFFIC);
+
+
+    //주소-좌표 변환 객체를 생성
+    var geocoder = new daum.maps.services.Geocoder();
+    //마커를 미리 생성
+    var marker = new daum.maps.Marker({
+        position: new daum.maps.LatLng(37.537187, 127.005476),
+        map: map
+    });
+
+
+    function sample6_execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+
+                // 각 주소의 노출 규칙에 따라 주소를 조합한다.
+                // 내려오는 변수가 값이 없는 경우엔 공백('')값을 가지므로, 이를 참고하여 분기 한다.
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                // 사용자가 선택한 주소가 도로명 타입일때 참고항목을 조합한다.
+                if (data.userSelectedType === 'R') {
+                    // 법정동명이 있을 경우 추가한다. (법정리는 제외)
+                    // 법정동의 경우 마지막 문자가 "동/로/가"로 끝난다.
+                    if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    // 건물명이 있고, 공동주택일 경우 추가한다.
+                    if (data.buildingName !== '' && data.apartment === 'Y') {
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    // 표시할 참고항목이 있을 경우, 괄호까지 추가한 최종 문자열을 만든다.
+                    if (extraAddr !== '') {
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    // 조합된 참고항목을 해당 필드에 넣는다.
+                    document.getElementById("sample6_extraAddress").value = extraAddr;
+
+                } else {
+                    document.getElementById("sample6_extraAddress").value = '';
+                }
+
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('sample6_postcode').value = data.zonecode;
+                document.getElementById("sample6_address").value = addr;
+
+                $('#bang_search_btn2').click(function (e) {
+                    e.preventDefault();
+                    get_addr(data);
+
+                    geocoder.addressSearch(data.address, function (results, status) {
+                        // 정상적으로 검색이 완료됐으면
+                        if (status === daum.maps.services.Status.OK) {
+
+                            var result = results[0]; //첫번째 결과의 값을 활용
+
+                            // 해당 주소에 대한 좌표를 받아서
+                            var coords = new daum.maps.LatLng(result.y, result.x);
+                            // 지도를 보여준다.
+                            mapContainer.style.display = "block";
+                            map.relayout();
+                            // 지도 중심을 변경한다.
+                            map.setCenter(coords);
+                            // 마커를 결과값으로 받은 위치로 옮긴다.
+                            marker.setPosition(coords)
+                        }
+                    });
+                });
+
+
+            }
+        }).open();
+    }
+
+
+    function get_addr(real) {
+        var ym = document.getElementById('sample6_date').value;
+        var sl = document.getElementById('custom').value;
+        alert(ym)
+        alert(sl);
+        $.getJSON({
+            method: 'GET',
+            url: {% url 'dabang:search' %},
+
+            data: {'addr': real, 'ym': ym, 'sl': sl, },
+            dataType: 'json',
+
+            success: function (data) {
+
+            },
+            error: function (data) {
+                alert("didn't work");
+            },
+        }).done(function (context) {
+            var address = context.address;
+            var zonecode = context.zonecode;
+            var price = context.price;
+            var name = context.name;
+            var year = context.year;
+            var month = context.month;
+            var day = context.day;
+            var floor = context.floor;
+
+            $('#card-header').append(address);
+            $('.card-subtitle').append(name);
+
+        });
+
+    }
+
+</script>

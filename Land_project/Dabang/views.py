@@ -30,27 +30,32 @@ class Dabang_List(ListView):
 #######################################################################
 
 
-class Dabang_search(View):
-    pass
-
 from django.http import JsonResponse
 
 def dabang_Search(request):
     if request.method == "GET":
+        # zone = request.GET.get('sigungu')
+
+
         data = request.GET
+
+        # print(data)
+        # print()
+        # 광화문풍림스페이스
+        # 광화문 풍림스페이스본
 
         add = data['addr[address]']
         zone = data["addr[sigunguCode]"]
+        ym = data['ym']
+        sl = data['sl']
+        bname = data['addr[roadnameCode]']
 
         context = {
             'address': add,
             'zonecode': zone,
         }
 
-
-        context.update(get_info(zone))
-
-        print(context)
+        context.update(get_info(zone, ym, sl))
 
         return JsonResponse(context)
 
@@ -59,21 +64,30 @@ def dabang_Search(request):
 #############################################################
 
 
-
 from pprint import pprint
 
-def get_info(LAW):
+def get_info(LAW, DEAL_YMD, SALE):
     context = dict()
 
-    # serviceKey = 'iW7CmOM8mzRIMTwitueEeqdoxZm7NVxjMnHA7+8j8T3aTt+J3DGYbMVRjcJhX7j5D7O7sg7AWG7m1RE14GmbvA=='
+    sale = {
+        '1' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade',
+        '2' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade',
+        '3' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade',
+        '4' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade',
+        '5' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcLandTrade',
+        '6' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent',
+        '7' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHRent',
+        '8' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent',
+        '9' : 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiRent',
+    }
 
-    url = 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev'
-    queryParams = '?' + urlencode({
+    url = sale[SALE]
+    queryParams = 'Dev?' + urlencode({
         quote_plus('ServiceKey'): Public_data,
         quote_plus('pageNo'): '1',
-        quote_plus('numOfRows'): '20',
+        quote_plus('numOfRows'): '100',
         quote_plus('LAWD_CD'): LAW,
-        quote_plus('DEAL_YMD'): '201512'})
+        quote_plus('DEAL_YMD'): DEAL_YMD})
 
 
     request = Request(url + queryParams)
@@ -85,6 +99,8 @@ def get_info(LAW):
     json_type = json.dumps(dict_type)
     dict_type2 = json.loads(json_type)
 
+    # pprint(dict_type2)
+
     context.update(
         price=dict_type2['response']['body']['items']['item'][0]['거래금액'],
         name=dict_type2['response']['body']['items']['item'][0]['아파트'],
@@ -93,11 +109,6 @@ def get_info(LAW):
         day=dict_type2['response']['body']['items']['item'][0]['일'],
         floor=dict_type2['response']['body']['items']['item'][0]['층'],
     )
-
-    print(context)
-    print()
-    print()
-    print()
 
     return context
 

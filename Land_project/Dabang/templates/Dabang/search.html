@@ -70,21 +70,21 @@
     <div id="exam" class="container">
         <div class="row">
             <div class="col-4">
+
                 <form action="{% url 'dabang:search' %}" method="get">
                     {% csrf_token %}
 
-                    <input type="text" onclick="cl()" id="sample6_postcode" class="form-control" placeholder="우편번호" required style="width: 80%;">
+                    <input type="text" onclick="cl()" id="sample6_postcode" class="form-control" placeholder="우편번호"
+                           required style="width:90%;display:inline;"> <i class="far fa-address-book"></i>
                     <input type="text" onclick="cl()" id="sample6_address" class="form-control" placeholder="주소"
-                           required>
-                    {#                    <input id="bang_search_btn1" class="btn btn-outline-secondary btn-lg" type="button"#}
-                    {#                           onclick="sample6_execDaumPostcode()"#}
-                    {#                           value="주소 검색"><br>#}
+                           required style="width:90%;display:inline;"> <i class="far fa-address-book"></i>
                     <input type="text" onclick="cl()" id="sample6_extraAddress" class="form-control" placeholder="상세주소"
-                           required><i class="far fa-calendar-alt"></i>
-                    <input type="month" id="sample6_date" class="form-control" name="ym" value="2015-12" required>
+                           required style="width:90%;display:inline;"> <i class="far fa-address-book"></i>
+                    <input type="month" id="sample6_date" class="form-control" name="ym" value="2015-12"
+                           required style="width:90%;display:inline;"> <i class="far fa-calendar-alt"></i>
 
                     <div class="form-group">
-                        <select class="custom-select" id="custom">
+                        <select class="custom-select"  style="width:90%;display:inline;" id="custom">
                             <option selected="" value="1">아파트매매</option>
                             <option value="2">연립다세대 매매</option>
                             <option value="3">단독다가구 매매</option>
@@ -94,17 +94,19 @@
                             <option value="7">연립다세대 전월세</option>
                             <option value="8">단독/다가구 전월세</option>
                             <option value="9">오피스텔 전월세</option>
-                        </select>
-                    </div>
+                        </select> <i class="fas fa-list"></i>
+                    </div >
 
-                    <button id="bang_search_btn2" class="btn btn-outline-info btn-lg" type="submit">검색!  <i class="fas fa-search-location"></i></button>
+                    <button id="bang_search_btn2" class="btn btn-outline-info btn-lg" type="submit">검색!  <i
+                            class="fas fa-search-location"></i></button>
                 </form>
+
             </div>
 
 
-            {#  지도표시  #}
+            {#  지도 표시 위치 #}
             <div class="col-8">
-                <span id="map" style="width:500px;height:500px;margin-top:10px;margin-left:100px;display:block;"></span>
+                <span id="map" style="width:500px;height:500px;margin-top:10px;margin-left:100px;display:inline-block;"></span>
             </div>
         </div>
     </div>
@@ -115,7 +117,6 @@
     {#  카드가 표시될 위치 #}
     <div class="container">
         <div id="row" class="row">
-
 
 
         </div>
@@ -179,7 +180,7 @@
         return sample6_execDaumPostcode()
     }
 
-
+    {# 검색창 #}
     function sample6_execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function (data) {
@@ -264,6 +265,7 @@
     }
 
 
+
     function get_addr(real) {
         var ym = document.getElementById('sample6_date').value;
         var sl = document.getElementById('custom').value;
@@ -313,32 +315,30 @@
             function make_html(index) {
                 html =
                     "<div class=\"col-4\" style=\"display: block;\">" +
-                    "<div class=\"card mb-3\">" +
-                    "<h4 id=\"card-header\" class=\"card-header\">" + name[index] + "</h4>" +
-                    {#"<div class=\"card-body\">" +#}
-                    {#"<h6 class=\"card-subtitle text-muted\"></h6>" +#}
-                    {#"</div>" +#}
-                    "<div class=\"card-body\">" +
-                    "<p class=\"card-text\">" + "거래금액:" + price[index] +
-                        "건축년도: " + year_of_construction[index] +
-                        "거래일: " + year[index] + month[index] + day[index] +
-                    "</p>" +
+                        "<div class=\"card mb-3\">" +
+                            "<h4 id=\"card-header\" class=\"card-header\">" + name[index] + "</h4>" +
+                            {#"<div class=\"card-body\">" +#}
+                                {#"<h6 class=\"card-subtitle text-muted\"></h6>" +#}
+                            {#"</div>" +#}
+                            "<div class=\"card-body\">" +
+                                "<p class=\"card-text\">" + "거래금액: " + price[index] + "<br>" +
+                                "건축년도: " + year_of_construction[index] + "<br>" +
+                                "거래일: " + year[index] + month[index] + day[index] + "<br>" +
+                                "</p>" +
+                            "</div>" +
 
-                    "</div>" +
-                    "<ul class=\"list-group list-group-flush\">\n" +
-                    "                        <li class=\"list-group-item\">Cras justo odio</li>\n" +
-                    "                        <li class=\"list-group-item\">Dapibus ac facilisis in</li>\n" +
-                    "                        <li class=\"list-group-item\">Vestibulum at eros</li>\n" +
-                    "           </ul>" +
-                    "                    <div class=\"card-body\">\n" +
-                    "                        <a href=\"#\" class=\"card-link\">상세 보기</a>\n" +
-                    "                    </div>\n" +
+                            "<div class=\"card-body\">" +
+                            "<a href=\" \" class=\"card-link\">Card link</a>" +
+
+                            "</div>" +
+                    {#"            <div class=\"card-body\">\n" +#}
+                    {#"                <a href=\"#\" class=\"card-link\">상세 보기</a>\n" +#}
+                    {#"                    </div>\n" +#}
                     {#"                    <div class=\"card-footer text-muted\">\n" +#}
                     {#"                        2 days ago\n" +#}
                     {#"                    </div>\n" +#}
-                    "                </div>\n" +
-                    "            </div>";
-
+                        "</div>\n" +
+                    "</div>";
                 return html
             }
 

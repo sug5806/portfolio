@@ -32,7 +32,6 @@ class Cart(object):
             yield item
 
 
-
     def add(self, product, quantity=1, is_update=False):
         product_id = str(product.id)
         if product.id not in self.cart:

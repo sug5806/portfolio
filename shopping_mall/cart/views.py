@@ -19,6 +19,7 @@ def add_product(request, product_id):
             cd = form.cleaned_data
             cart.add(product=product[0], quantity=cd['quantity'], is_update=cd['is_update'])
 
+    print(cart.cart.values())
     url = request.META['HTTP_REFERER']
     return redirect(url)
 
@@ -37,4 +38,13 @@ def cart_detail(request):
     for item in cart:
         item['quantity_form'] = AddToCartForm(initial={'quantity': item['quantity'], 'is_update': True})
 
-    return render(request, 'cart/cart_detail.html', {'cart': cart})
+
+    continue_url = '/'
+    # 현재 페이지 주소 얻기
+    # 1) request.build_absolute_uri('?') : 쿼리스트링 없이
+    # 2) request.build_absolute_uri() : 쿼리스트링까지 얻어오기
+    current_url = request.build_absolute_uri('?')
+    if 'HTTP_REFERER' in request.META and current_url != request.META['HTTP_REFERER']:
+        continue_url = request.META['HTTP_REFERER']
+
+    return render(request, 'cart/cart_detail.html', {'cart': cart, 'continue_url': continue_url})

@@ -33,9 +33,9 @@ class Dabang_List(ListView):
 from django.http import JsonResponse
 
 def dabang_Search(request):
-    if request.method == "GET":
+    if request.method == "POST":
 
-        data = request.GET
+        data = request.POST
 
         add = data['addr[address]']
         zone = data["addr[sigunguCode]"]
@@ -53,6 +53,7 @@ def dabang_Search(request):
         context.update(get_info(zone, YM, sl, road_name_Code))
 
         pprint(context)
+        print()
         print()
 
         return JsonResponse(context)

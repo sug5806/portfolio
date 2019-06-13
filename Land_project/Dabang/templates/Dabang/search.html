@@ -106,7 +106,7 @@
 
             {#  지도 표시 위치 #}
             <div class="col-8">
-                <span id="map" style="width:500px;height:500px;margin-top:10px;margin-left:100px;display:inline-block;"></span>
+                <span id="map" style="width:500px;height:500px;margin-top:10px;margin-left:100px;display:none;"></span>
             </div>
         </div>
     </div>
@@ -264,14 +264,15 @@
         }
     }
 
-
-
     function get_addr(real) {
         var ym = document.getElementById('sample6_date').value;
         var sl = document.getElementById('custom').value;
 
-        $.getJSON({
-            method: 'GET',
+        var token = '{{csrf_token}}';
+
+        $.post({
+            headers: { "X-CSRFToken": token },
+            method: 'POST',
             url: {% url 'dabang:search' %},
 
             data: {'addr': real, 'ym': ym, 'sl': sl,},
@@ -286,12 +287,9 @@
         }).done(function (context) {
             len = context.list.length;
 
-            {#alert(context.list[0]['거래금액']);#}
             {# 뷰에서 정보 받아오기 #}
             var address = context.address;
             var zonecode = context.zonecode;
-
-            {#var arr = new Array();#}
 
             var price = new Array();
             var name = new Array();
@@ -300,9 +298,10 @@
             var day = new Array();
             var floor = new Array();
             var year_of_construction = new Array();
+            var area = new Array();
 
             for (var i = 0; i < len; i++) {
-                {#alert(context.list[i]['거래금액']);#}
+
                 price[i] = context.list[i]['거래금액'] + "만원";
                 name[i] = context.list[i]['아파트'];
                 year[i] = context.list[i]['년'];
@@ -310,6 +309,8 @@
                 day[i] = context.list[i]['일'];
                 floor[i] = context.list[i]['층'];
                 year_of_construction[i] = context.list[i]['건축년도'];
+                area[i] = context.list[i]['전용면적'];
+
             }
 
             function make_html(index) {
@@ -323,13 +324,14 @@
                             "<div class=\"card-body\">" +
                                 "<p class=\"card-text\">" + "거래금액: " + price[index] + "<br>" +
                                 "건축년도: " + year_of_construction[index] + "<br>" +
-                                "거래일: " + year[index] + month[index] + day[index] + "<br>" +
+                                "거래일: " + year[index] + "년 " + month[index] + "월 " + day[index] + "일" + "<br>" +
                                 "</p>" +
                             "</div>" +
-
+                            "<ul class=\"list-group list-group-flush\">" +
+                                "<li class=\"list-group-item\">" + "전용면적: " + area[index] + " m" + "<sup>2</sup> (" + (area[index]/3.3).toFixed(1) + "평)" + "</li>" +
+                            "</ul>" +
                             "<div class=\"card-body\">" +
-                            "<a href=\" \" class=\"card-link\">Card link</a>" +
-
+                                "<a href=\" \" class=\"btn btn-outline-secondary\">상세 보기</a>" +
                             "</div>" +
                     {#"            <div class=\"card-body\">\n" +#}
                     {#"                <a href=\"#\" class=\"card-link\">상세 보기</a>\n" +#}
@@ -346,10 +348,7 @@
                 html = make_html(index);
                 $(html).appendTo('#row');
             }
-
         });
-
     }
-
 
 </script>

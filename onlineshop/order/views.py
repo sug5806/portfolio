@@ -39,6 +39,7 @@ class OrderCreateAjaxView(View):
         return JsonResponse({}, status=401)
 
 from .models import OrderTransaction
+
 class OrderCheckoutAjaxView(View):
     def post(self, request, *args, **kwargs):
         order_id = request.POST.get('order_id')
@@ -52,8 +53,8 @@ class OrderCheckoutAjaxView(View):
 
         if merchant_order_id is not None:
             data = {
-                'works':True,
-                'merchant_id':merchant_order_id
+                'works': True,
+                'merchant_id': merchant_order_id
             }
             return JsonResponse(data)
         else:
@@ -71,25 +72,34 @@ class OrderImpAjaxView(View):
             return JsonResponse({}, status=401)
 
         order = order[0]
+
         transaction = OrderTransaction.objects.filter(order=order, merchant_order_id=merchant_id, amount=amount)
 
         if not transaction.exists():
             return JsonResponse({}, status=401)
 
-        exact_transaction = transaction[0]
-        # 결제 번호 저장
-        exact_transaction.transaction_id = imp_id
-        # 결제가 되었다
-        exact_transaction.success = True
-        exact_transaction.save()
+        # 결제 정보 수정
+        try:
+            exact_transaction = transaction[0]
+            exact_transaction.transaction_id = imp_id
+            exact_transaction.success = True
+            exact_transaction.save()
 
-        order.paid = True
-        order.save()
-        data = {
-            'works': True
-        }
+            # 주문 정보 - 결제 완료로 변경
+            order.paid = True
+            order.save()
+            data = {
+                'works': True
+            }
 
-        return JsonResponse(data)
+            cart = Cart(request)
+            cart.clear()
+
+            return JsonResponse(data)
+        except Exception as e:
+            print("transaction error", e)
+            return JsonResponse({"message": str(e)}, status=401)
+
 
 from .models import Order
 
@@ -100,13 +110,33 @@ def order_complete(request):
 
     # Todo : 만약 없는 오더 번호일 경우 예외처리
     if order.exists():
-        return render(request,'order/order_created.html', {'order': order[0]})
+        return render(request, 'order/order_created.html', {'order': order[0]})
 
 
 
 
+from django.shortcuts import get_object_or_404
+from django.contrib.admin.views.decorators import staff_member_required
 
 
+# 관리자 권한이 있는 사람만 실행 가능
+@staff_member_required
+def admin_order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'order/admin/order_detail.html', {'order': order})
 
+
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+import weasyprint
+
+@staff_member_required
+def admin_order_pdf(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    html = render_to_string('order/admin/pdf.html', {'order': order})
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'filename=invoice_{order.id}.pdf'
+    weasyprint.HTML(string=html).write_pdf(response)
+    return response
 
 

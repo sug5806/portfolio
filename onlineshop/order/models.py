@@ -1,5 +1,6 @@
 from django.db import models
 from shop.models import Product
+
 class Order(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -38,7 +39,9 @@ class OrderItem(models.Model):
 
 import uuid
 import hashlib
-from .iamport import payment_prepare, find_transaction
+from .iamport import payment_prepare, find_transaction, cancel_transaction
+
+
 class OrderTransactionManager(models.Manager):
     def create_new(self, order, amount, success=None, transaction_status=None):
         if not order:
@@ -92,6 +95,36 @@ class OrderTransaction(models.Model):
         ordering = ['-created']
 
 
+def order_payment_validation(sender, instance, *args, **kwargs):
+    if instance.transaction_id:
+        import_transaction = OrderTransaction.objects.get_transaction(
+            meerchant_order_id=instance.merchant_order_id
+        )
+
+        merchant_order_id = import_transaction['merchant_order_id']
+        imp_id = import_transaction['imp_id']
+        amount = import_transaction['amount']
+
+        is_not_valid = instance.merchant_order_id != merchant_order_id or instance.transaction_id!=imp_id or instance.amount != amount
+
+        if is_not_valid:
+            data = cancel_transaction(instance.transaction_id)
+            if instance.order.paid == False:
+                # data = cancel_transaction(instance.transaction_id)
+                raise ValueError("비정상 거래로 결체 취소되었습니다.")
+            raise ValueError("비정상 거래로 주문 실패하였습니다.")
+
+        # local_transaction = OrderTransaction.objects.filter(merchant_order_id=merchant_order_id, transaction_id=imp_id, amount=amount).exists()
+
+        # if not import_transaction or not local_transaction:
+        #     raise ValueError("비정상 거래 입니다람쥐.")
+
+
+        # 에러가 있다면, 결제 취소
+
+
+from django.db.models.signals import pre_save
+pre_save.connect(order_payment_validation, sender=OrderTransaction)
 
 
 

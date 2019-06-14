@@ -61,9 +61,38 @@ class OrderCheckoutAjaxView(View):
 
 class OrderImpAjaxView(View):
     def post(self, request, *args, **kwargs):
-        return JsonResponse({})
+        order_id = request.POST.get('order_id')
+        merchant_id = request.POST.get('merchant_id')
+        imp_id = request.POST.get('imp_id')
+        amount = request.POST.get('amount')
+        order = Order.objects.filter(pk=order_id)
+
+        if not order.exists():
+            return JsonResponse({}, status=401)
+
+        order = order[0]
+        transaction = OrderTransaction.objects.filter(order=order, merchant_order_id=merchant_id, amount=amount)
+
+        if not transaction.exists():
+            return JsonResponse({}, status=401)
+
+        exact_transaction = transaction[0]
+        # 결제 번호 저장
+        exact_transaction.transaction_id = imp_id
+        # 결제가 되었다
+        exact_transaction.success = True
+        exact_transaction.save()
+
+        order.paid = True
+        order.save()
+        data = {
+            'works': True
+        }
+
+        return JsonResponse(data)
 
 from .models import Order
+
 def order_complete(request):
     # ajax로 주문 완료시, 완료 페이지로 이동하는 경우에 사용
     order_id = request.GET.get('order_id')
@@ -71,7 +100,7 @@ def order_complete(request):
 
     # Todo : 만약 없는 오더 번호일 경우 예외처리
     if order.exists():
-        return render(request,'order/order_created.html', {'order':order[0]})
+        return render(request,'order/order_created.html', {'order': order[0]})
 
 
 

@@ -63,6 +63,7 @@
 {# 입력창 #}
 <div class="text-center">
     <div>
+        <span id="want"> 우리동네 </span>
         <span id="house_price">집값</span>
         <span id="want">이 궁금하신가요?</span>
     </div>
@@ -89,7 +90,7 @@
                             <option value="2">연립다세대 매매</option>
                             <option value="3">단독다가구 매매</option>
                             <option value="4">오피스텔 매매</option>
-                            <option value="5">토지 매매</option>
+
                             <option value="6">아파트 전월세</option>
                             <option value="7">연립다세대 전월세</option>
                             <option value="8">단독/다가구 전월세</option>
@@ -232,6 +233,8 @@
                         // 정상적으로 검색이 완료됐으면
                         if (status === daum.maps.services.Status.OK) {
 
+
+
                             var result = results[0]; //첫번째 결과의 값을 활용
 
                             // 해당 주소에 대한 좌표를 받아서
@@ -242,7 +245,25 @@
                             // 지도 중심을 변경한다.
                             map.setCenter(coords);
                             // 마커를 결과값으로 받은 위치로 옮긴다.
-                            marker.setPosition(coords)
+                            marker.setPosition(coords);
+
+
+
+
+                            // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                            var iwContent = '<div class ="label"><span class="left"></span><span class="center">' + data.buildingName + '</span><span class="right"></span></div>',
+                                iwPosition = new daum.maps.LatLng(result.y, result.x); //인포윈도우 표시 위치입니다
+                                iwRemoveable = true;
+
+                            // 인포윈도우를 생성합니다
+                            var infowindow = new daum.maps.InfoWindow({
+                                position : iwPosition,
+                                content : iwContent,
+                                {#removable : iwRemoveable,#}
+                            });
+
+                            infowindow.open(map, marker);
+
                         }
                     });
                 });
@@ -264,6 +285,7 @@
         }
     }
 
+    {# 주소 ajax #}
     function get_addr(real) {
         var ym = document.getElementById('sample6_date').value;
         var sl = document.getElementById('custom').value;
@@ -275,7 +297,7 @@
             method: 'POST',
             url: {% url 'dabang:search' %},
 
-            data: {'addr': real, 'ym': ym, 'sl': sl,},
+            data: {'addr': real, 'ym': ym, 'sl': sl, },
             dataType: 'json',
 
             success: function (data) {
@@ -287,67 +309,141 @@
         }).done(function (context) {
             len = context.list.length;
 
-            {# 뷰에서 정보 받아오기 #}
-            var address = context.address;
-            var zonecode = context.zonecode;
+            var price = new Array(); {# 거래금액 #}
+            var name = new Array(); {# 아파트 or 연립다세대 건물 이름 #}
+            var year = new Array(); {# 거래 년도 #}
+            var month = new Array(); {# 거래 월 #}
+            var day = new Array(); {# 거래 일 #}
+            var floor = new Array(); {# 층 #}
+            var year_of_construction = new Array(); {# 건축년도 #}
+            var area = new Array(); {# 평수 #}
+            var deposit = new Array(); {# 보증금 #}
+            var monthly_rent = new Array(); {# 월세 #}
 
-            var price = new Array();
-            var name = new Array();
-            var year = new Array();
-            var month = new Array();
-            var day = new Array();
-            var floor = new Array();
-            var year_of_construction = new Array();
-            var area = new Array();
+
+            {# 뷰에서 정보 받아오기 #}
+            var address = context.address; {# 주소 #}
+            var zonecode = context.zonecode; {# 지역 코드 #}
+            var building_name = context.building_name;  {# 건물 이름 #}
+
+
+
+
+
 
             for (var i = 0; i < len; i++) {
-
                 price[i] = context.list[i]['거래금액'] + "만원";
-                name[i] = context.list[i]['아파트'];
+
+                if(sl==='1'|'2'|'6'|'7'){
+                    if(sl==='1'|'6'){
+                        name[i] = context.list[i]['아파트'];
+                        alert('asdfdasfas' + name[i]);
+                    }
+
+                    else{
+                        name[i] = context.list[i]['연립다세대'];
+                        alert("name= " +  name[i]);
+                    }
+
+                    if (sl==='6'|'7'){
+                        deposit[i] = context.list[i]['보증금액'];
+                        monthly_rent[i] = context.list[i]['월세금액'];
+                    }
+
+                    floor[i] = context.list[i]['층'];
+                }
+
+
                 year[i] = context.list[i]['년'];
                 month[i] = context.list[i]['월'];
                 day[i] = context.list[i]['일'];
-                floor[i] = context.list[i]['층'];
+
                 year_of_construction[i] = context.list[i]['건축년도'];
                 area[i] = context.list[i]['전용면적'];
 
             }
 
+            $.post({
+                headers: {"X-CSRFToken": token},
+                method: 'POST',
+                url: {% url 'dabang:TF' %},
+                data: {
+                    'price': price,
+                    'name': name,
+                    'year': year,
+                    'month': month,
+                    'day': day,
+                    'floor': floor,
+                    'year_of_construction': year_of_construction,
+                    'area': area,
+                    'deposit': deposit,
+                    'monthly_rent': monthly_rent,
+                },
+                dataType: 'json',
+
+                success: function(data){
+                    alert('두번째 ajax 성공');
+                },
+                error: function (data){
+                    alert('두번쨰 ajax 실패');
+                }
+             }).done(function (context){
+                 alert(asdf)
+            });
+
+
+
             function make_html(index) {
                 html =
                     "<div class=\"col-4\" style=\"display: block;\">" +
                         "<div class=\"card mb-3\">" +
-                            "<h4 id=\"card-header\" class=\"card-header\">" + name[index] + "</h4>" +
+                            {% if not name %}
+                                "<h4 id=\"card-header\" class=\"card-header\">" + name[index] + "</h4>" +
+                            {% endif %}
                             {#"<div class=\"card-body\">" +#}
                                 {#"<h6 class=\"card-subtitle text-muted\"></h6>" +#}
                             {#"</div>" +#}
                             "<div class=\"card-body\">" +
-                                "<p class=\"card-text\">" + "거래금액: " + price[index] + "<br>" +
+                                "<p class=\"card-text\">" +
+                            {% if price|length >= 0 %}
+                                "거래금액: " + price[index] + "<br>" +
+                            {% endif %}
+                            {% if year_of_construction|length >= 0 %}
                                 "건축년도: " + year_of_construction[index] + "<br>" +
+                            {% endif %}
+                            {% if deposit|length >= 0 %}
+                                "보증금: " + deposit[index] + "<br>" +
+                            {% endif %}
+                            {% if monthly_rent|length >= 0 %}
+                                "월세: " + monthly_rent[index] + "<br>" +
+                            {% endif %}
                                 "거래일: " + year[index] + "년 " + month[index] + "월 " + day[index] + "일" + "<br>" +
+                                "</p>" +
+                            "</div>" +
+                            "<div class=\"card-body\">" +
+                                "<p class=\"card-text\">" + "주소: " + address + "<br>" +
                                 "</p>" +
                             "</div>" +
                             "<ul class=\"list-group list-group-flush\">" +
                                 "<li class=\"list-group-item\">" + "전용면적: " + area[index] + " m" + "<sup>2</sup> (" + (area[index]/3.3).toFixed(1) + "평)" + "</li>" +
+                                "<li class=\"list-group-item\">" + "층:&nbsp&nbsp&nbsp"  + floor[index] + "층" + "</li>" +
                             "</ul>" +
-                            "<div class=\"card-body\">" +
-                                "<a href=\" \" class=\"btn btn-outline-secondary\">상세 보기</a>" +
-                            "</div>" +
-                    {#"            <div class=\"card-body\">\n" +#}
-                    {#"                <a href=\"#\" class=\"card-link\">상세 보기</a>\n" +#}
-                    {#"                    </div>\n" +#}
-                    {#"                    <div class=\"card-footer text-muted\">\n" +#}
-                    {#"                        2 days ago\n" +#}
-                    {#"                    </div>\n" +#}
                         "</div>\n" +
                     "</div>";
                 return html
             }
 
             for (var index = 0; index < len; index++) {
-                html = make_html(index);
-                $(html).appendTo('#row');
+
+                    html = make_html(index);
+                    $(html).appendTo('#row');
+
             }
+
+            {#$('#sample6_postcode').val('');#}
+            {#$('#sample6_address').val('');#}
+            {#$('#sample6_extraAddress').val('');#}
+
         });
     }
 

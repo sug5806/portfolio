@@ -59,6 +59,7 @@ def dabang_Search(request):
         print()
         print()
         print()
+        print()
 
         return JsonResponse(context)
 
@@ -68,37 +69,32 @@ def dabang_Search(request):
 from pprint import pprint
 
 def get_info(LAW, DEAL_YMD, SALE, road_name_Code):
+    print(SALE)
+    print()
 
     sale = {
         '1': 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTradeDev',
         '2': 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHTrade',
-        '3': 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade',
+        '3': 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHTrade',
         '4': 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiTrade',
         '6': 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptRent',
-        '7': 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHRent',
-        '8': 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent',
+        '7': 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcRHRent',
+        '8': 'http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcSHRent',
         '9': 'http://openapi.molit.go.kr/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcOffiRent',
     }
 
-    queryParams = {
-        '1'or'6': '?' + urlencode({
-            quote_plus('ServiceKey'): Public_data,
-            quote_plus('pageNo'): '1',
-            quote_plus('numOfRows'): '500',
-            quote_plus('LAWD_CD'): LAW,
-            quote_plus('DEAL_YMD'): DEAL_YMD}),
+    queryParams = '?' + urlencode({
+        quote_plus('ServiceKey'): Public_data,
+        quote_plus('pageNo'): '1',
+        quote_plus('numOfRows'): '500',
+        quote_plus('LAWD_CD'): LAW,
+        quote_plus('DEAL_YMD'): DEAL_YMD})
 
-        '2'or'7': '?' + urlencode({
-            quote_plus('ServiceKey'): Public_data,
-            quote_plus('pageNo'): '1',
-            quote_plus('numOfRows'): '500',
-            quote_plus('LAWD_CD'): LAW,
-            quote_plus('DEAL_YMD'): DEAL_YMD}),
-    }
+
 
     url = sale[SALE]
 
-    request = Request(url + str(queryParams[SALE]))
+    request = Request(url + queryParams)
 
     request.get_method = lambda: 'GET'
     response_body = urlopen(request).read()
@@ -106,6 +102,11 @@ def get_info(LAW, DEAL_YMD, SALE, road_name_Code):
     dict_type = xmltodict.parse(response_body)
     json_type = json.dumps(dict_type)
     dict_type2 = json.loads(json_type)
+
+    # print(dict_type2)
+    # print()
+    # print()
+    # print()
 
 
     print('########################################################################################')
@@ -125,21 +126,6 @@ def get_info(LAW, DEAL_YMD, SALE, road_name_Code):
     context = {'list': AT_list}
 
     return context
-
-
-def TF(request):
-    if request.method == "POST":
-        data = request.POST
-        print('2번째 ajax로 넘긴 데이터')
-        pprint(data)
-        print()
-
-        context = data
-
-
-    # return render(request, 'Dabang/search.html', context)
-    return JsonResponse(data)
-
 
 
 # http: // openapi.molit.go.kr / OpenAPI_ToolInstallPackage / service / rest / RTMSOBJSvc / getRTMSDataSvcAptTradeDev?ServiceKey = iW7CmOM8mzRIMTwitueEeqdoxZm7NVxjMnHA7 % 2

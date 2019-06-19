@@ -6,5 +6,5 @@ app_name = 'dabang'
 urlpatterns = [
     path('', Dabang_List.as_view(), name='list'),
     path('search/', dabang_Search, name='search'),
-    path('tf/', TF, name='TF'),
+    # path('tf/', TF, name='TF'),
 ]

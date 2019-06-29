@@ -60,6 +60,11 @@ def dabang_Search(request):
         print()
         print()
         print()
+        print()
+        print()
+        print()
+        print()
+
 
         return JsonResponse(context)
 
@@ -103,13 +108,9 @@ def get_info(LAW, DEAL_YMD, SALE, road_name_Code):
     json_type = json.dumps(dict_type)
     dict_type2 = json.loads(json_type)
 
-    # print(dict_type2)
-    # print()
-    # print()
-    # print()
-
 
     print('########################################################################################')
+    print()
 
     length = int(dict_type2['response']['body']['totalCount'])
 
@@ -127,21 +128,3 @@ def get_info(LAW, DEAL_YMD, SALE, road_name_Code):
 
     return context
 
-
-# http: // openapi.molit.go.kr / OpenAPI_ToolInstallPackage / service / rest / RTMSOBJSvc / getRTMSDataSvcAptTradeDev?ServiceKey = iW7CmOM8mzRIMTwitueEeqdoxZm7NVxjMnHA7 % 2
-# B8j8T3aTt % 2
-# BJ3DGYbMVRjcJhX7j5D7O7sg7AWG7m1RE14GmbvA % 3
-# D % 3
-# D & pageNo = 1 & numOfRows = 3 & LAWD_CD = 11110 & DEAL_YMD = 201512
-#
-# http: // openapi.molit.go.kr / OpenAPI_ToolInstallPackage / service / rest / RTMSOBJSvc / getRTMSDataSvcRHTradeDev?ServiceKey = iW7CmOM8mzRIMTwitueEeqdoxZm7NVxjMnHA7 % 2
-# B8j8T3aTt % 2
-# BJ3DGYbMVRjcJhX7j5D7O7sg7AWG7m1RE14GmbvA % 3
-# D % 3
-# D & pageNo = 1 & numOfRows = 500 & LAWD_CD = 11110 & DEAL_YMD = 201512
-#
-# http: // openapi.molit.go.kr: 8081 / OpenAPI_ToolInstallPackage / service / rest / RTMSOBJSvc / getRTMSDataSvcRHTrade?ServiceKey = iW7CmOM8mzRIMTwitueEeqdoxZm7NVxjMnHA7 % 2
-# B8j8T3aTt % 2
-# BJ3DGYbMVRjcJhX7j5D7O7sg7AWG7m1RE14GmbvA % 3
-# D % 3
-# D & LAWD_CD = 11110 & DEAL_YMD = 201512

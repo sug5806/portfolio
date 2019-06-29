@@ -6,8 +6,18 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug':('name',)}
 admin.site.register(Category, CategoryAdmin)
 
-class PostAdmin(admin.ModelAdmin):
-    list_display = ['id','title','slug','created','updated']
-    ordering = ['-updated','-created']
-    prepopulated_fields = {'slug': ('title',)}
+# class PostAdmin(admin.ModelAdmin):
+#     list_display = ['id','title','slug','created','updated']
+#     ordering = ['-updated','-created']
+#     prepopulated_fields = {'slug': ('title',)}
+
+
+from django_summernote.admin import SummernoteModelAdmin
+
+class PostAdmin(SummernoteModelAdmin):
+    summernote_fields = '__all__'
+
+
 admin.site.register(Post, PostAdmin)
+
+

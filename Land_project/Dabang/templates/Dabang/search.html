@@ -405,35 +405,8 @@
             }
 
 
-            {#$.post({#}
-            {#    headers: {"X-CSRFToken": token},#}
-            {#    method: 'POST',#}
-            {#    url: {% url 'dabang:TF' %},#}
-            {#    data: {#}
-            {#        'price': price,#}
-            {#        'name': name,#}
-            {#        'year': year,#}
-            {#        'month': month,#}
-            {#        'day': day,#}
-            {#        'floor': floor,#}
-            {#        'year_of_construction': year_of_construction,#}
-            {#        'area': area,#}
-            {#        'deposit': deposit,#}
-            {#        'monthly_rent': monthly_rent,#}
-            {#    },#}
-            {#    dataType: 'json',#}
-            {##}
-            {#    success: function(data){#}
-            {#        alert('두번째 ajax 성공');#}
-            {#    },#}
-            {#    error: function (data){#}
-            {#        alert('두번쨰 ajax 실패');#}
-            {#    }#}
-            {# }).done(function (context){#}
-            {#     alert(asdf)#}
-            {# });#}
 
-원
+
 
             function make_html(index) {
 
@@ -500,38 +473,7 @@
 
                 html +=  "</ul></div></di>";
 
-                {#html =#}
-                {#    "<div class=\"col-4\" style=\"display: block;\">" +#}
-                {#        "<div class=\"card mb-3\">" +#}
-                {##}
-                {#                "<h4 id=\"card-header\" class=\"card-header\">" + name[index] + "</h4>" +#}
-                {##}
-                            {#"<div class=\"card-body\">" +#}
-                                {#"<h6 class=\"card-subtitle text-muted\"></h6>" +#}
-                            {#"</div>" +#}
-                {#            "<div class=\"card-body\">" +#}
-                {#                "<p class=\"card-text\">" +#}
-                {##}
-                {#                "거래금액: " + price[index] + "<br>" +#}
-                {##}
-                {#                "건축년도: " + year_of_construction[index] + "<br>" +#}
-                {##}
-                {#                "보증금: " + deposit[index] + "<br>" +#}
-                {##}
-                {#                "월세: " + monthly_rent[index] + "<br>" +#}
-                {##}
-                {#                "거래일: " + year[index] + "년 " + month[index] + "월 " + day[index] + "일" + "<br>" +#}
-                {#                "</p>" +#}
-                {#            "</div>" +#}
-                {#            "<div class=\"card-body\">" +#}
-                {#                "<p class=\"card-text\">" + "주소: " + address + "<br></p>" +#}
-                {#            "</div>" +#}
-                {#            "<ul class=\"list-group list-group-flush\">" +#}
-                {#                "<li class=\"list-group-item\">" + "전용면적: " + area[index] + " m" + "<sup>2</sup> (" + (area[index]/3.3).toFixed(1) + "평)" + "</li>" +#}
-                {#                "<li class=\"list-group-item\">" + "층:&nbsp&nbsp&nbsp"  + floor[index] + "층" + "</li>" +#}
-                {#            "</ul>" +#}
-                {#        "</div>\n" +#}
-                {#    "</div>";#}
+
 
 
                 return html
@@ -543,10 +485,6 @@
                     $(html).appendTo('#row');
 
             }
-
-            {#$('#sample6_postcode').val('');#}
-            {#$('#sample6_address').val('');#}
-            {#$('#sample6_extraAddress').val('');#}
 
         });
     }

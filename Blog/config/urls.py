@@ -18,12 +18,14 @@ from django.urls import path, include
 from django.views.static import serve
 from django.urls import re_path
 from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     path('', include('post.urls')),
+    path('summernote/', include('django_summernote.urls')),
 
 ]
 
@@ -33,4 +35,5 @@ if settings.DEBUG:
     import debug_toolbar
     urlpatterns += [
         path('debug', include(debug_toolbar.urls)),
+        static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
     ]

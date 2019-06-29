@@ -59,4 +59,13 @@
     <button class="btn btn-primary btn-lg" type="submit">{% trans "Sign In" %}</button>
 </form>
 
+<form method="get" action="https://www.accountkit.com/v1.0/basic/dialog/sms_login/">
+  <input type="hidden" name="app_id" value="296755364548251">
+  <input type="hidden" name="redirect" value="http://127.0.0.1:8000/">
+  <input type="hidden" name="state" value={% csrf_token %}>
+  <input type="hidden" name="fbAppEventsEnabled" value=true>
+  <button type="submit">Login</button>
+</form>
+
+
 {% endblock %}

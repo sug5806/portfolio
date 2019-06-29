@@ -1,14 +1,15 @@
 <form action="{% url 'comment:add_comment' %}" method="post">
     {% csrf_token %}
-    {{form.as_p}}
+    {{ form.as_p }}
     <input type="submit" class="btn btn-primary" value="Write">
 </form>
 <table class="table table-striped">
-{% for object in object_list %}
-    <tr>
-        <td>{{object.text}} {% if object.author == user %}<a href="{% url 'delete_comment' object.id %}">[삭제]</a>{% endif %}</td>
-        <td>{{object.author.username}}</td>
-        <td>{{object.created}}</td>
-    </tr>
-{% endfor %}
-    </table>
+    {% for object in object_list %}
+        <tr>
+            <td>{{ object.text }} {% if object.author == user %}
+                <a href="{% url 'delete_comment' object.id %}">[삭제]</a>{% endif %}</td>
+            <td>{{ object.author.username }}</td>
+            <td>{{ object.created }}</td>
+        </tr>
+    {% endfor %}
+</table>
